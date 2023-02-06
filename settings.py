@@ -14,8 +14,6 @@ else:
 # the session config can be accessed from methods in your apps as self.session.config,
 # e.g. self.session.config['participation_fee']
 sample_participants = []
-with open('sample_participants.json') as sample_participants:
-    sample_participants=json.load(sample_participants)
 SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=1.50, doc="",
     data_pages_enabled=True,
@@ -34,50 +32,78 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 SESSION_CONFIGS = [
     dict(
-        name='main_session',
-        display_name='Full session',
-        num_demo_participants=24,
-        app_sequence=['pt0', 'slider_training', 
-                      'pt1grp', 'pt2', 'pt2grp',
-                      'pt3', 'pt4', 'pt99'
-                     ],
-        test=0,
-        participation_fee=0,  # this is set to 0 b/c this is added to payoff
-        real_world_currency_per_point=1,
-        partfee=2,
-        pt1rate=0.2,
-        pt3rate=1,
-        num_part=16,
-        max_earning=25,
-        uq_error='Check your answer.',
+        name='nbo_choice',
+        num_demo_participants=3,
+        app_sequence=['prolific_ID_begin',
+                      'informed_consent',
+                      'NBO_choice',
+                      'survey_demographics_nbo',
+                      'prolific_ID_end',],
+        real_world_currency_per_point = 0.10,
+        participation_fee = 1.00,
+        consent = 'no_choice/consent.pdf',
+        p_completion_link = 'xxxxxxxx',
+        consent_additional_message = """
+        Please note that the form above is used for several experiments.
+        In this experiment we expect that you will make at least $2.25 plus a bonus payment based on your decisions.
+        """,
         doc="""
-        Program for gender differences in the cost of contradictions.
-        Number of participants: multiple of 8.
-        Max number of participants: 32 (can be larger, but need to modify codes)
-        """
+    Edit the p_completion_link variable with the completion code for Prolific session
+    """
     ),
     dict(
-        name='main_session_test',
-        display_name='Full session (Shorter version)',
-        num_demo_participants=24,
-        app_sequence=['pt0', 'slider_training', 
-                      'pt1grp', 'pt2', 'pt2grp',
-                      'pt3', 'pt4', 'pt99'
-                     ],
-        test=1,
-        participation_fee=0,  # this is set to 0 b/c this is added to payoff
-        real_world_currency_per_point=1,
-        partfee=2,
-        pt1rate=0.2,
-        pt3rate=1,
-        num_part=16,
-        max_earning=25,
-        uq_error='Check your answer.',
-        doc="""
-        Program for gender differences in the cost of contradictions.
-        Number of participants: multiple of 8.
-        Max number of participants: 32 (can be larger, but need to modify codes)
-        """
+        name='nbo_choice_baseline',
+        num_demo_participants=1,
+        app_sequence=['prolific_ID_begin',
+                        'informed_consent',
+                      'NBO_choice',
+                      'survey_demographics_nbo',
+                      'prolific_ID_end',],
+        treat = 'baseline',
+        participation_fee = 1.00,
+        real_world_currency_per_point = 0.10,
+        consent = 'no_choice/consent.pdf',
+        p_completion_link = 'https://app.prolific.co/submissions/complete?cc=CTS22023',
+        consent_additional_message = """
+        Please note that the form above is used for several experiments.
+        In this experiment we expect that you will make at least $2.25 plus a bonus payment based on your decisions.
+        """,
+    ),
+    dict(
+        name='nbo_choice_nbo',
+        num_demo_participants=1,
+        app_sequence=['prolific_ID_begin',
+                        'informed_consent',
+                      'NBO_choice',
+                      'survey_demographics_nbo',
+                      'prolific_ID_end',],
+        treat = 'nbo',
+        real_world_currency_per_point = 0.10,
+        participation_fee = 1.00,
+        consent = 'no_choice/consent.pdf',
+        p_completion_link = 'https://app.prolific.co/submissions/complete?cc=CTS22023',
+        consent_additional_message = """
+        Please note that the form above is used for several experiments.
+        In this experiment we expect that you will make at least $2.25 plus a bonus payment based on your decisions.
+        """,
+    ),
+    dict(
+        name='nbo_choice_exo',
+        num_demo_participants=1,
+        app_sequence=['prolific_ID_begin',
+                        'informed_consent',
+                      'NBO_choice',
+                      'survey_demographics_nbo',
+                      'prolific_ID_end',],
+        treat = 'exo',
+        real_world_currency_per_point = 0.10,
+        participation_fee = 1.00,
+        consent = 'no_choice/consent.pdf',
+        p_completion_link = 'https://app.prolific.co/submissions/complete?cc=CTS22023',
+        consent_additional_message = """
+        Please note that the form above is used for several experiments.
+        In this experiment we expect that you will make at least $2.25 plus a bonus payment based on your decisions.
+        """,
     ),
 ]
 
@@ -91,31 +117,8 @@ USE_POINTS = True
 
 ROOMS = [
     dict(
-        name='econ101',
-        display_name='Econ 101 class',
-        participant_label_file='_rooms/econ101.txt',
-    ),
-    dict(name='live_demo', display_name='Room for live demo (no participant labels)'),
-    dict(name='prolific_qsp', display_name='Prolific Room for QSP (no participant labels)'),
-    dict(
         name='rpi_lab',
         display_name='RPI Virtual Econ Laboratory'
-    ),
-    dict(
-        name='rpi_lab_qsp_1',
-        display_name='RPI Virtual Econ Laboratory: QSP 1'
-    ),
-    dict(
-        name='rpi_lab_qsp_2',
-        display_name='RPI Virtual Econ Laboratory: QSP 2'
-    ),
-    dict(
-        name='rpi_lab_qsp_3',
-        display_name='RPI Virtual Econ Laboratory: QSP 3'
-    ),
-    dict(
-        name='rpi_lab_qsp_4',
-        display_name='RPI Virtual Econ Laboratory: QSP 4'
     ),
 ]
 
@@ -137,7 +140,6 @@ INSTALLED_APPS = ['otree',
                   'django.contrib.humanize',
                   'otreeutils'
                   ]
-EXTENSION_APPS = ['slider_puzzle']
 # inactive session configs
 # dict(name='trust', display_name="Trust Game", num_demo_participants=2, app_sequence=['trust', 'payment_info']),
 # dict(name='prisoner', display_name="Prisoner's Dilemma", num_demo_participants=2,
